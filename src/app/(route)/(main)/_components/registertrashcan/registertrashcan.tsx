@@ -5,7 +5,6 @@ import { ButtonProps } from "@/types/button";
 import { Coordinate } from "@/types/navigate";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollBarStyle } from "@/util/const";
-import { useSession } from "next-auth/react";
 import useDrawMarker from "@/hooks/map/usedrawmarker";
 import createMarker from "@/util/kakaomap/createmarker";
 
@@ -49,7 +48,6 @@ export default function RegisterTrashCan() {
     info: null,
   });
   const { kakaoMap, keywordSearch, geoCoder } = useKakaoStore();
-  const session = useSession();
 
   const { reFresh, needRefresh, setNeedRefresh } = useDrawMarker(
     selectedMethod === "new" ? "REGISTERED" : "SUGGESTED",
@@ -97,9 +95,6 @@ export default function RegisterTrashCan() {
           `/api/trashcans/${selectedMethod === "new" ? "registrations" : "suggestions"}`,
           {
             method: "POST",
-            headers: {
-              Authorization: `Bearer ${session.data?.accessToken}`,
-            },
             body: formData,
           },
         )

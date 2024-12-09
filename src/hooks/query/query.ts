@@ -81,11 +81,7 @@ export const queryInfo = {
     queryFn: async () => {
       const session = await getSession();
       if (!session?.accessToken) throw new Error("로그인이 필요합니다.");
-      const res = await fetch(`${APIURL}/api/rank/me`, {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },
-      });
+      const res = await fetch(`${APIURL}/api/rank/me`, {});
       if (!res.ok) {
         throw new Error("랭킹 정보를 불러오는데 실패했습니다.");
       }
@@ -95,14 +91,8 @@ export const queryInfo = {
   memberList: (page: number, memberName?: string) => ({
     queryKey: ["members", memberName, page],
     queryFn: async () => {
-      const session = await getSession();
       const response = await fetch(
         `${APIURL}/api/admin/members?page=${page}${memberName?.length ? `&memberName=${memberName}` : ``}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        },
       );
       const result = await response.json();
       return result;
@@ -116,14 +106,8 @@ export const queryInfo = {
   ) => ({
     queryKey: ["trashcanList", status, page],
     queryFn: async () => {
-      const session = await getSession();
       const response = await fetch(
         `${APIURL}/api/admin/trashcans?page=${page}&status=${status}${sort?.length ? `&sort=${sort}` : ``}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-        },
       );
       const result = await response.json();
       return result;
@@ -133,12 +117,7 @@ export const queryInfo = {
   reportList: (page: number) => ({
     queryKey: ["reportList", page],
     queryFn: async () => {
-      const session = await getSession();
-      const response = await fetch(`${APIURL}/api/admin/reports?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },
-      });
+      const response = await fetch(`${APIURL}/api/admin/reports?page=${page}`);
       const result = await response.json();
       return result;
     },
@@ -171,11 +150,6 @@ export const infiniteQueryInfo = {
       if (!session?.accessToken) throw new Error("로그인이 필요합니다.");
       const res = await fetch(
         `${APIURL}/api/trashcans/members/me?page=${pageParam}&type=${type}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.accessToken}`,
-          },
-        },
       );
 
       const data = await res.json();

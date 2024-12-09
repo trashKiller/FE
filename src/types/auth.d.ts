@@ -16,6 +16,7 @@ declare module "next-auth" {
     accessToken: string;
     jwtExpiredTime: number;
     memberRole: string;
+    isAdmin?: boolean;
   }
 
   interface Token extends DefaultJWT {

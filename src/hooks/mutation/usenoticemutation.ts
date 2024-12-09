@@ -1,6 +1,6 @@
 import { APIURL } from "@/util/const";
 import { useMutation } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+
 import { NoticeResponse } from "../query/usenoticequery";
 
 const useNoticeMutation = ({
@@ -10,8 +10,6 @@ const useNoticeMutation = ({
   id?: string;
   method?: "POST" | "DELETE";
 } = {}) => {
-  const session = useSession();
-
   return useMutation({
     mutationFn: async (input: NoticeResponse) => {
       const res = await fetch(
@@ -20,7 +18,6 @@ const useNoticeMutation = ({
           method: id ? "PATCH" : method,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.data?.accessToken}`,
           },
           body: JSON.stringify(input),
         },

@@ -1,7 +1,5 @@
 import { TrashCanInfo, TrashCanStatus } from "@/types/trashinfo";
-import { getSession } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { APIURL } from "../const";
 
 export default function createCustomOverlay(
   trashcanInfo: TrashCanInfo & Partial<{ count: number }>,
@@ -15,7 +13,6 @@ export default function createCustomOverlay(
       <h2 class="font-bold text-lg text-dark-green">${trashcanInfo.addressDetail ?? "쓰레기통"}</h2>
       <button id="close">X</button>
     </div>
-    ${status === "REGISTERED" || status === "SUGGESTED" ? `<p class="text-sm text-[#777777]">${trashcanInfo?.count} 회 추천됨</p>` : ""}
     <div class="flex gap-2">
       <button id="navigate" class="border p-2 rounded-md">길찾기</button>
       <button id="report" class="border p-2 rounded-md bg-red-500 text-white">신고하기</button>
@@ -57,14 +54,12 @@ export default function createCustomOverlay(
   CustomOverlay.a
     .querySelector("#report")
     .addEventListener("click", async () => {
-      const session = await getSession();
       const res = await fetch(
-        `${APIURL}/api/trashcans/reports/${trashcanInfo.trashcanId}`,
+        `/api/trashcans/reports/${trashcanInfo.trashcanId}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken}`,
           },
           body: JSON.stringify({ description: "buttonReport" }),
         },
@@ -76,14 +71,12 @@ export default function createCustomOverlay(
   CustomOverlay.a
     .querySelector("#post")
     ?.addEventListener("click", async () => {
-      const session = await getSession();
       const res = await fetch(
-        `${APIURL}/api/trashcans/${status === "REGISTERED" ? "registrations" : "suggestions"}/${trashcanInfo.trashcanId}`,
+        `/api/trashcans/${status === "REGISTERED" ? "registrations" : "suggestions"}/${trashcanInfo.trashcanId}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken}`,
           },
         },
       );

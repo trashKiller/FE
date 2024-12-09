@@ -67,7 +67,7 @@ export const POST = async (req: NextRequest) => {
   const trashcanId = await createTrashcan({
     ...Object.fromEntries(formData),
     userId: session.user.id,
-    status: "ADDED", // 임시처리
+    status: "SUGGESTED", // 임시처리
   } as TrashcanCreateReq);
 
   if (!trashcanId)

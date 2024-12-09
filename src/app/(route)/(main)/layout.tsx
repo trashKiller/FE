@@ -66,24 +66,24 @@ export default function MainLayout({ children }: MainLayoutProps) {
       roadViewClient.getNearestPanoId(position, 50, (panoId: any) => {
         kakaoRoadView.setPanoId(panoId, position);
       });
-      setIsRoadViewOpen(true);
+      setIsRoadView(true);
       window.kakao.maps.event.removeListener(kakaoMap, "click", handleClick);
     },
     [roadViewClient, kakaoRoadView, kakaoMap],
   );
 
   useEffect(() => {
-    if (window.kakao && isRoadView) {
+    if (window.kakao && isRoadViewOpen) {
       kakaoMap.addOverlayMapTypeId(window.kakao.maps.MapTypeId.ROADVIEW);
       window.kakao.maps.event.addListener(kakaoMap, "click", handleClick);
     }
 
-    if (window.kakao && !isRoadView) {
-      setIsRoadViewOpen(false);
+    if (window.kakao && !isRoadViewOpen) {
+      setIsRoadView(false);
       kakaoMap.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.ROADVIEW);
       window.kakao.maps.event.removeListener(kakaoMap, "click", handleClick);
     }
-  }, [isRoadView]);
+  }, [isRoadViewOpen]);
 
   return (
     <>
@@ -101,8 +101,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       )}
 
       <ButtonList
-        selectedStatus={isRoadView}
-        setselectedStatus={setIsRoadView}
+        selectedStatus={isRoadViewOpen}
+        setselectedStatus={setIsRoadViewOpen}
         buttonInfo={buttonProps}
         className={`absolute right-4 z-30 w-40${
           deviceType === "mobile" ? " top-36" : " top-4"
@@ -120,7 +120,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </button>
       <div
         ref={mapRef}
-        style={{ zIndex: !isRoadViewOpen ? "10" : "0" }}
+        style={{ zIndex: !isRoadView ? "10" : "0" }}
         className={
           (deviceType === "mobile" ? false : isAccordionOpen)
             ? "absolute top-0 h-svh duration-300 w-[calc(100%-20rem)] translate-x-[19.875rem] box-content"

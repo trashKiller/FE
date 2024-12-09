@@ -5,7 +5,6 @@ import { useKakaoStore } from "@/stores/usekakaostore";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/modal/modal";
 import { useMemo, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
 import useTrashCanInfoQuery from "@/hooks/query/usetrashcaninfoquery";
 
 export default function TrashCanDetail({ info }: { info: TrashCanInfo }) {
@@ -18,7 +17,6 @@ export default function TrashCanDetail({ info }: { info: TrashCanInfo }) {
   } = info || {};
 
   const { kakaoRoadView, roadViewClient, setIsRoadView } = useKakaoStore();
-  const session = useSession();
   const route = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -46,7 +44,6 @@ export default function TrashCanDetail({ info }: { info: TrashCanInfo }) {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${session?.data?.accessToken}`,
                 },
                 body: JSON.stringify({
                   description: textareaRef.current?.value,
@@ -137,7 +134,9 @@ export default function TrashCanDetail({ info }: { info: TrashCanInfo }) {
             roadViewClient.getNearestPanoId(
               new window.kakao.maps.LatLng(latitude, longitude),
               50,
-              (panoId: any) => kakaoRoadView.setPanoId(panoId),
+              (panoId: any) => {
+                kakaoRoadView.setPanoId(panoId);
+              },
             );
             setIsRoadView(true);
           }}
